@@ -8,6 +8,8 @@ from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from bot.comands import set_commands
+from bot.handlers.add_reminder_handlers import add_reminder_router
+from bot.handlers.cmd import cmd_router
 from bot.middlewares.apschedmiddleware import SchedulerMiddleware
 from settings import settings
 
@@ -48,16 +50,11 @@ async def start():
     dp.update.middleware.register(SchedulerMiddleware(scheduler))
 
     # подключение роутеров
-    # dp.include_routers(
-        # cmd_router,
-        # delay_remind_handlers,
-        # edit_reminder_handlers,
-        # add_reminder_handlers,
-        # delete_reminder_handlers,
-        # list_reminders_dialog,
-        # setup_dialog,
+    dp.include_routers(
+        cmd_router,
+        add_reminder_router,
 
-    # )
+    )
 
     # подключение диалогов
     # setup_dialogs(dp)
