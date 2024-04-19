@@ -1,0 +1,7 @@
+# created by virtualenv automatically
+venv
+.idea
+.env
+out.wav
+tmp.ogg
+jobs.sqlite
