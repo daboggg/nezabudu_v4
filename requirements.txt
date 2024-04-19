@@ -21,6 +21,7 @@ packaging==24.0
 pycparser==2.22
 pydantic==2.5.3
 pydantic_core==2.14.6
+python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.1
 six==1.16.0

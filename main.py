@@ -8,6 +8,7 @@ from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from bot.comands import set_commands
+from bot.create_bot import bot
 from bot.handlers.add_reminder_handlers import add_reminder_router
 from bot.handlers.cmd import cmd_router
 from bot.middlewares.apschedmiddleware import SchedulerMiddleware
@@ -41,7 +42,6 @@ async def start():
 
     scheduler.start()
 
-    bot = Bot(token=settings.bots.bot_token, parse_mode='HTML')
 
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)
