@@ -15,7 +15,7 @@ async def cancel_reminder(callback: CallbackQuery, apscheduler: AsyncIOScheduler
     await callback.answer()
 
     part_msg = callback.message.text.split("\n")
-    msg = Bold(f"{part_msg[0].replace('запланировано', 'отменено')}\n").as_html() + Strikethrough(
+    msg = Bold(f"{part_msg[0].replace('запланировано', 'отменено').replace('перепланировано', 'отменено')}\n").as_html() + Strikethrough(
         '\n'.join(part_msg[1:])).as_html()
 
     await callback.message.edit_text(msg)
