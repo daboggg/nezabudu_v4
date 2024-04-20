@@ -10,6 +10,7 @@ from bot.comands import set_commands
 from bot.create_bot import bot
 from bot.handlers.add_reminder_handlers import add_reminder_router
 from bot.handlers.cmd import cmd_router
+from bot.handlers.delete_reminder_handlers import cancel_reminder_router
 from bot.middlewares.apschedmiddleware import SchedulerMiddleware
 from settings import settings
 
@@ -52,6 +53,7 @@ async def start():
     dp.include_routers(
         cmd_router,
         add_reminder_router,
+        cancel_reminder_router,
 
     )
 

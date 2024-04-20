@@ -1,4 +1,6 @@
+import string
 from datetime import datetime, timedelta
+import random
 
 from aiogram.types import Message
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -29,16 +31,19 @@ async def add_reminder (message: Message, apscheduler: AsyncIOScheduler, reminde
                         },
                         jobstore='sqlite',
                         **reminder.params)
-
     # текст задания
     reminder_info = get_reminder_info(reminder, job)
 
+    # создать id для удаления клавиатуры
+    hide_kb_id = ''.join([random.choice(string.ascii_lowercase + string.digits) for i in range(16)])
+
     # сообщение об установленном задании
-    last_msg = await message.answer(reminder_info, reply_markup=cancel_or_edit_kb())
+    last_msg = await message.answer(reminder_info, reply_markup=cancel_or_edit_kb(job.id, hide_kb_id))
 
     # удалить клавиатуру через промежуток времени
     apscheduler.add_job(
         delete_keyboard,
+        id=hide_kb_id,
         trigger='date',
         run_date = datetime.now() + timedelta(seconds=15),
         kwargs={

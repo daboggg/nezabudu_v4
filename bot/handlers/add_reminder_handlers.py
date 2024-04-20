@@ -45,6 +45,7 @@ async def get_message_or_voice(message: Message, apscheduler: AsyncIOScheduler, 
             await state.set_state(AddReminderSG.get_text)
             await message.answer(Italic("✏️ 🎤 введите текст напоминания").as_html())
     except Exception as e:
+        print(e)
         logger.error(e)
         await other_msg(message)
 
