@@ -6,3 +6,6 @@ class AddReminderSG(StatesGroup):
 
 class EditReminderSG(StatesGroup):
     get_message = State()
+
+class RescheduleReminderSG(StatesGroup):
+    reschedule_reminder = State()

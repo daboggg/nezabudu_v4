@@ -1,9 +1,11 @@
+import time
 from datetime import datetime, timedelta
 
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.utils.formatting import as_list
 
 from bot.core import bot, scheduler
+from bot.keyboards.delay_keyboard import delay_kb
 from parser_v4.reminder import Reminder
 from utils.from_datetime_to_str import datetime_to_short_str
 
@@ -23,6 +25,8 @@ async def send_reminder(user_id: int,
         "\t── ⋆⋅☆⋅⋆ ── ⋆⋅☆⋅⋆ ──",
     )
 
+    remind_id = str(time.time_ns())
+
     # если оповещение повторное, удалить предыдущее сообщение
     if msg := kwargs.get("message", None):
         try:
@@ -30,12 +34,13 @@ async def send_reminder(user_id: int,
         except TelegramBadRequest:
             pass
 
-    message = await bot.send_message(user_id, format_text.as_html())
+    message = await bot.send_message(user_id, format_text.as_html(), reply_markup= await delay_kb(remind_id, user_id))
 
     # добавить задание на повторное оповещения
     scheduler.add_job(
         send_reminder,
         run_date=datetime.now() + timedelta(seconds=20),
+        id=remind_id,
         trigger='date',
         name=str(user_id),
         kwargs={
