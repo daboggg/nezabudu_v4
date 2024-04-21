@@ -10,6 +10,7 @@ class Bots:
 
 @dataclass
 class Database:
+    async_db_url: str
     db_url: str
     db_echo: bool
 
@@ -30,6 +31,7 @@ def get_settings(path: str):
             admin_id=env.int('ADMIN_ID')
         ),
         db=Database(
+            async_db_url=env.str('DATABASE_URL_ASYNC'),
             db_url=env.str('DATABASE_URL'),
             db_echo=env.bool('DB_ECHO')
         )
