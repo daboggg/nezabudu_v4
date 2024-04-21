@@ -27,12 +27,18 @@ async def add_reminder(message: Message, apscheduler: AsyncIOScheduler, reminder
 
     # добавить задание в скедулер
     job = apscheduler.add_job(send_reminder,
+                              name=str(message.from_user.id),
                               kwargs={
                                   'user_id': message.from_user.id,
                                   'reminder': reminder,
+                                  'run_time': None
                               },
                               jobstore='sqlite',
                               **reminder.params)
+    job.kwargs['run_time'] = job.next_run_time
+    apscheduler.modify_job(job_id=job.id,jobstore='sqlite',kwargs=job.kwargs)
+
+
     # текст задания
     reminder_info = get_reminder_info(reminder, job, edited)
 

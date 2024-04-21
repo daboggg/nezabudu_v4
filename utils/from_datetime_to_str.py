@@ -18,11 +18,11 @@ def datetime_to_str(date: datetime):
     return f"{date.day} {months[date.month]} {date.year} г. ({day_of_week[date.weekday()]}) в {hour}:{minute}"
 
 
-# def datetime_to_short_str(date: datetime):
-#     hour = date.hour
-#     minute = date.minute
-#     if hour < 10:
-#         hour = f'0{hour}'
-#     if minute <10:
-#         minute = f'0{minute}'
-#     return f"{date.day} {months[date.month]}  в {hour}:{minute}"
+def datetime_to_short_str(date: datetime):
+    hour = date.hour
+    minute = date.minute
+    if hour < 10:
+        hour = f'0{hour}'
+    if minute <10:
+        minute = f'0{minute}'
+    return f"{date.day} {months[date.month]}  в {hour}:{minute}"

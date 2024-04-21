@@ -7,7 +7,7 @@ from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from bot.comands import set_commands
-from bot.create_bot import bot
+from bot.core import bot, scheduler
 from bot.handlers.add_reminder_handlers import add_reminder_router
 from bot.handlers.cmd import cmd_router
 from bot.handlers.delete_reminder_handlers import cancel_reminder_router
@@ -20,8 +20,6 @@ async def start_bot(bot: Bot):
     await set_commands(bot)
     await bot.send_message(settings.bots.admin_id, text='Бот запущен')
 
-
-scheduler: AsyncIOScheduler
 
 
 async def stop_bot(bot: Bot):
@@ -37,10 +35,7 @@ async def start():
                         )
     logger = logging.getLogger(__name__)
 
-    # Создаю и запускаю скедулер
-    global scheduler
-    scheduler = AsyncIOScheduler(timezone="Europe/Moscow", jobstores={'sqlite': SQLAlchemyJobStore(url=settings.db.db_url)})
-
+    #запускаю скедулер
     scheduler.start()
 
 
