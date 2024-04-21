@@ -4,13 +4,15 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.utils.formatting import Bold, as_marked_section, as_list, Italic
 
+from db.db_actions import add_user_to_db
+
 cmd_router = Router()
 
 
 @cmd_router.message(CommandStart())
 async def cmd_start(message: Message) -> None:
-    # await add_user_to_db(message.from_user.id, message.from_user.username, message.from_user.first_name,
-    #                      message.from_user.last_name)
+    await add_user_to_db(message.from_user.id, message.from_user.username, message.from_user.first_name,
+                         message.from_user.last_name)
     await message.answer(Italic("✏️ 🎤 пожалуйста введите время и текст сообщения").as_html())
 
 
