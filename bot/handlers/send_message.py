@@ -2,7 +2,7 @@ import time
 from datetime import datetime, timedelta
 
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.utils.formatting import as_list
+from aiogram.utils.formatting import as_list, Italic, Bold
 
 from bot.core import bot, scheduler
 from bot.keyboards.delay_keyboard import delay_kb
@@ -18,8 +18,8 @@ async def send_reminder(user_id: int,
                         **kwargs) -> None:
     # форматирование текста для напоминания
     format_text = as_list(
-        str(datetime_to_short_str(run_time)),
-        f'повторное оповещение: {repeated_notification}' if repeated_notification else '',
+        Bold(datetime_to_short_str(run_time)),
+        Italic(f'повторное оповещение: {repeated_notification}' if repeated_notification else ''),
         "\t── ⋆⋅☆⋅⋆ ── ⋆⋅☆⋅⋆ ──",
         f"👉{reminder.message}👈",
         "\t── ⋆⋅☆⋅⋆ ── ⋆⋅☆⋅⋆ ──",

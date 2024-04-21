@@ -42,7 +42,7 @@ async def delay_remind(callback: CallbackQuery, apscheduler: AsyncIOScheduler) -
 
     # форматирование текста для напоминания
     format_text = as_list(
-        '✔️ Выполнено',
+        Bold('✔️ Выполнено'),
         '',
         "\t── ⋆⋅☆⋅⋆ ── ⋆⋅☆⋅⋆ ──",
         f"👉{job.kwargs.get('reminder').message}👈",
