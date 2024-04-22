@@ -39,7 +39,7 @@ async def send_reminder(user_id: int,
         except TelegramBadRequest:
             pass
 
-    message = await bot.send_message(user_id, format_text.as_html(), reply_markup= await delay_kb(remind_id, user_id))
+    message = await bot.send_message(user_id, format_text.as_html(), reply_markup=await delay_kb(remind_id, user_id))
 
     # добавить задание на повторное оповещения
     scheduler.add_job(

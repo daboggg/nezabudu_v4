@@ -5,7 +5,7 @@ import soundfile as sf
 import speech_recognition as sr
 
 
-async def conv_voice(message: Message, bot: Bot):
+async def conv_voice(message: Message, bot: Bot) -> list:
     await bot.download(message.voice, "tmp.ogg")
 
     data, samplerate = sf.read('tmp.ogg')

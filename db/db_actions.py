@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 # добавляет пользователя в бд
-async def add_user_to_db(user_id: int, username: str, first_name: str, last_name: str):
+async def add_user_to_db(user_id: int, username: str, first_name: str, last_name: str) -> None:
     session = db_helper.get_scoped_session()
     user: User = (await session.execute(select(User).where(User.id == user_id))).scalar()
 
@@ -29,7 +29,7 @@ async def add_user_to_db(user_id: int, username: str, first_name: str, last_name
 
 
 # добавить авто откладывание напоминания
-async def set_auto_delay_time(user_id: int, auto_delay_time: dict):
+async def set_auto_delay_time(user_id: int, auto_delay_time: dict) -> None:
     session = db_helper.get_session()
     user: User = await session.get(User, user_id)
     user.auto_delay_time = json.dumps(auto_delay_time)
@@ -37,9 +37,8 @@ async def set_auto_delay_time(user_id: int, auto_delay_time: dict):
     await session.close()
 
 
-
 # получить авто откладывание напоминания
-async def get_auto_delay_time(user_id: int):
+async def get_auto_delay_time(user_id: int) -> str:
     session = db_helper.get_session()
     user: User = await session.get(User, user_id)
     auto_delay_time = user.auto_delay_time
@@ -48,7 +47,7 @@ async def get_auto_delay_time(user_id: int):
 
 
 # добавить откладывания напоминания
-async def set_delay_times(user_id: int, delay_times: str):
+async def set_delay_times(user_id: int, delay_times: str) -> None:
     session = db_helper.get_session()
     user: User = await session.get(User, user_id)
     user.delay_times = delay_times
@@ -57,10 +56,9 @@ async def set_delay_times(user_id: int, delay_times: str):
 
 
 # получить набор для кнопок откладывания напоминания
-async def get_delay_times(user_id: int):
+async def get_delay_times(user_id: int) -> str:
     session = db_helper.get_session()
     user: User = await session.get(User, user_id)
     delay_times = user.delay_times
     await session.close()
     return delay_times
-

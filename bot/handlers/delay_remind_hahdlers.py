@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from aiogram import Router, F, Bot
+from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 from aiogram.utils.formatting import as_list, Bold, as_key_value, Italic
@@ -10,14 +10,14 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from bot.actions import get_reminder, add_reminder
 from bot.handlers.send_message import send_reminder
 from bot.state_groups import RescheduleReminderSG
-from utils.from_datetime_to_str import datetime_to_str, datetime_to_short_str
+from utils.from_datetime_to_str import datetime_to_str
 
 delay_remind_router = Router()
 
 
 # отложить напоминание
 @delay_remind_router.callback_query(F.data.startswith("delay_remind"))
-async def delay_remind(callback: CallbackQuery, apscheduler: AsyncIOScheduler):
+async def delay_remind(callback: CallbackQuery, apscheduler: AsyncIOScheduler) -> None:
     tmp = callback.data.split(":")
     job_id = tmp[1]
     res = {tmp[2]: int(tmp[3])}

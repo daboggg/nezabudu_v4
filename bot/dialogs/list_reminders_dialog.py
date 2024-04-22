@@ -15,7 +15,7 @@ from parser_v4.reminder import Reminder
 from utils.from_datetime_to_str import datetime_to_short_str, datetime_to_str
 
 
-async def get_reminders(dialog_manager: DialogManager, **kwargs):
+async def get_reminders(dialog_manager: DialogManager, **kwargs) -> dict:
     user_id = dialog_manager.event.from_user.id
     apscheduler: AsyncIOScheduler = dialog_manager.middleware_data.get('apscheduler')
     result = list()
@@ -37,7 +37,7 @@ async def get_reminders(dialog_manager: DialogManager, **kwargs):
     }
 
 
-async def get_reminder(dialog_manager: DialogManager, **kwargs):
+async def get_reminder(dialog_manager: DialogManager, **kwargs) -> dict:
     job_id = dialog_manager.dialog_data.get("job_id")
     apscheduler: AsyncIOScheduler = dialog_manager.middleware_data.get("apscheduler")
     job = apscheduler.get_job(job_id)
@@ -55,14 +55,15 @@ async def get_reminder(dialog_manager: DialogManager, **kwargs):
 
     return {"remind_info": remind_info}
 
+
 async def on_reminder_selected(callback: CallbackQuery, widget: Any,
-                               manager: DialogManager, job_id: str):
+                               manager: DialogManager, job_id: str) -> None:
     manager.dialog_data["job_id"] = job_id
     await manager.switch_to(ListOfRemindersSG.show_reminder)
 
 
 async def on_delete_selected(callback: CallbackQuery, button: Button,
-                     dialog_manager: DialogManager):
+                             dialog_manager: DialogManager) -> None:
     apscheduler: AsyncIOScheduler = dialog_manager.middleware_data.get("apscheduler")
     apscheduler.remove_job(dialog_manager.dialog_data.get("job_id"))
     await callback.answer("напоминание удалено")
@@ -99,7 +100,7 @@ list_reminders_dialog = Dialog(
     Window(
         Format('{remind_info}'),
         Back(Const("Назад")),
-        Button(Const("Удалить"),id='delete_reminder', on_click=on_delete_selected),
+        Button(Const("Удалить"), id='delete_reminder', on_click=on_delete_selected),
         state=ListOfRemindersSG.show_reminder,
         getter=get_reminder,
     ),

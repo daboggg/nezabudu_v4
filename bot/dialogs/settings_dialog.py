@@ -33,15 +33,15 @@ async def get_data(**kwargs):
     }
 
 
-async def on_state_changed_auto_delay(event: Message, select: ManagedRadio, dialog_manager: DialogManager, data):
+async def on_state_changed_auto_delay(event: Message, select: ManagedRadio, dialog_manager: DialogManager, data) -> None:
     await set_auto_delay_time(event.from_user.id, {"minutes": int(data)})
 
 
-async def on_state_changed_delay(event: Message, select: ManagedRadio, dialog_manager: DialogManager, data):
+async def on_state_changed_delay(event: Message, select: ManagedRadio, dialog_manager: DialogManager, data) -> None:
     await set_delay_times(event.from_user.id, json.dumps(select.get_checked(), ensure_ascii=False))
 
 
-async def dialog_on_start(_, manager: ManagerImpl):
+async def dialog_on_start(_, manager: ManagerImpl) -> None:
     res = await get_auto_delay_time(manager.event.from_user.id)
     auto_delay_time: dict = json.loads(res)
 

@@ -8,7 +8,7 @@ day_of_week = ["в понедельник", "во вторник", "в сред�
                "в пятницу", "в субботу", "в воскресенье", ]
 
 
-def datetime_to_str(date: datetime):
+def datetime_to_str(date: datetime) -> str:
     hour = date.hour
     minute = date.minute
     if hour < 10:
@@ -18,7 +18,7 @@ def datetime_to_str(date: datetime):
     return f"{date.day} {months[date.month]} {date.year} г. ({day_of_week[date.weekday()]}) в {hour}:{minute}"
 
 
-def datetime_to_short_str(date: datetime):
+def datetime_to_short_str(date: datetime) -> str:
     hour = date.hour
     minute = date.minute
     if hour < 10:
