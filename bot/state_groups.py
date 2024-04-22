@@ -9,3 +9,7 @@ class EditReminderSG(StatesGroup):
 
 class RescheduleReminderSG(StatesGroup):
     reschedule_reminder = State()
+
+class ListOfRemindersSG(StatesGroup):
+    start = State()
+    show_reminder = State()
