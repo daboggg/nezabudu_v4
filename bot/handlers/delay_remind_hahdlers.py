@@ -8,6 +8,7 @@ from apscheduler.job import Job
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from bot.actions import get_reminder, add_reminder
+from bot.handlers.send_message import send_reminder
 from bot.state_groups import RescheduleReminderSG
 from utils.from_datetime_to_str import datetime_to_str, datetime_to_short_str
 
@@ -15,21 +16,38 @@ delay_remind_router = Router()
 
 
 # отложить напоминание
-# @delay_remind_router.callback_query(F.data.startswith("delay_remind"))
-# async def delay_remind(callback: CallbackQuery, apscheduler: AsyncIOScheduler):
-#     tmp = callback.data.split(":")
-#     job_id = tmp[1]
-#     res = {tmp[2]: int(tmp[3])}
-#     job: Job = apscheduler.reschedule_job(job_id=job_id, trigger='date',
-#                                           run_date=datetime.now() + timedelta(**res))
-#     remind_info = as_list(
-#         Bold("💡 Напоминание отложено.\n"),
-#         as_key_value("⏰", Italic(datetime_to_str(job.next_run_time))),
-#         as_key_value("📝", Italic(job.kwargs.get("text"))),
-#     ).as_html()
-#
-#     await callback.answer()
-#     await callback.message.edit_text(remind_info)
+@delay_remind_router.callback_query(F.data.startswith("delay_remind"))
+async def delay_remind(callback: CallbackQuery, apscheduler: AsyncIOScheduler):
+    tmp = callback.data.split(":")
+    job_id = tmp[1]
+    res = {tmp[2]: int(tmp[3])}
+    job: Job = apscheduler.get_job(job_id)
+
+    # добавить задание в скедулер
+    new_job = apscheduler.add_job(send_reminder,
+                                  name=job.name,
+                                  kwargs={
+                                      'user_id': job.kwargs.get('user_id'),
+                                      'reminder': job.kwargs.get('reminder'),
+                                      'run_time': None
+                                  },
+                                  jobstore='sqlite',
+                                  trigger='date',
+                                  run_date=datetime.now() + timedelta(**res))
+
+    job.remove()
+
+    new_job.kwargs['run_time'] = new_job.next_run_time
+    apscheduler.modify_job(job_id=new_job.id, jobstore='sqlite', kwargs=new_job.kwargs)
+
+    remind_info = as_list(
+        Bold("💡 Напоминание отложено.\n"),
+        as_key_value("⏰", Italic(datetime_to_str(new_job.next_run_time))),
+        as_key_value("📝", Italic(new_job.kwargs.get("reminder").message)),
+    ).as_html()
+
+    await callback.answer()
+    await callback.message.edit_text(remind_info)
 
 
 # напоминание выполнено

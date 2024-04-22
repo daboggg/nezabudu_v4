@@ -1,3 +1,4 @@
+import json
 import time
 from datetime import datetime, timedelta
 
@@ -6,6 +7,7 @@ from aiogram.utils.formatting import as_list, Italic, Bold
 
 from bot.core import bot, scheduler
 from bot.keyboards.delay_keyboard import delay_kb
+from db.db_actions import get_auto_delay_time
 from parser_v4.reminder import Reminder
 from utils.from_datetime_to_str import datetime_to_short_str
 
@@ -16,6 +18,9 @@ async def send_reminder(user_id: int,
                         run_time: datetime,
                         repeated_notification: int = 0,
                         **kwargs) -> None:
+    auto_delay_time = await get_auto_delay_time(user_id)
+    auto_delay_time = json.loads(auto_delay_time)
+
     # форматирование текста для напоминания
     format_text = as_list(
         Bold(datetime_to_short_str(run_time)),
@@ -39,7 +44,7 @@ async def send_reminder(user_id: int,
     # добавить задание на повторное оповещения
     scheduler.add_job(
         send_reminder,
-        run_date=datetime.now() + timedelta(seconds=20),
+        run_date=datetime.now() + timedelta(**auto_delay_time),
         id=remind_id,
         trigger='date',
         name=str(user_id),

@@ -18,20 +18,3 @@ def get_reminder_info(reminder: Reminder, job: Job, edited: bool = False) -> str
 
     ).as_html()
     return reminder_info
-
-# async def edit_reminder_info(state: FSMContext, job: Job):
-#     state_data = await state.get_data()
-#     reminder: Reminder = state_data.get("reminder")
-#     message = job.kwargs.get("text")
-#     period = reminder.period
-#     item = []
-#     if rd := period:
-#         item.append(as_key_value("♾", Italic(rd)))
-#     reminder_info = as_list(
-#         Bold("💡 Напоминание запланировано.\n"),
-#         as_key_value("⏰", Italic(datetime_to_str(job.next_run_time))),
-#         *item,
-#         as_key_value("📝", Italic(message)),
-#
-#     ).as_html()
-#     return reminder_info

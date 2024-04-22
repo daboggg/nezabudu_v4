@@ -26,8 +26,8 @@ async def get_reminders(dialog_manager: DialogManager, **kwargs):
         if reminder.period:
             datetime_str = reminder.period
         else:
-            run_date = reminder.params.get('run_date')
-            dt = datetime.fromisoformat(str(run_date))
+            run_time = job.kwargs.get('run_time')
+            dt = datetime.fromisoformat(str(run_time))
             datetime_str = datetime_to_short_str(dt)
         result.append((datetime_str, reminder.message, job.id))
 
