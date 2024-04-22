@@ -5,7 +5,7 @@ from aiogram.types import Message
 from aiogram.utils.formatting import Bold, as_marked_section, as_list, Italic
 from aiogram_dialog import DialogManager, StartMode
 
-from bot.state_groups import ListOfRemindersSG
+from bot.state_groups import ListOfRemindersSG, SetupRemindersSG
 from db.db_actions import add_user_to_db
 
 cmd_router = Router()
@@ -48,8 +48,8 @@ async def cmd_start(message: Message) -> None:
 @cmd_router.message(Command(commands="list"))
 async def list_reminders(_, dialog_manager: DialogManager) -> None:
     await dialog_manager.start(ListOfRemindersSG.start, mode=StartMode.RESET_STACK)
-#
-#
-# @cmd_router.message(Command(commands="setup"))
-# async def settings_reminders(_, dialog_manager: DialogManager) -> None:
-#     await dialog_manager.start(SetupReminders.select_setting, mode=StartMode.RESET_STACK)
+
+
+@cmd_router.message(Command(commands="setup"))
+async def settings_reminders(_, dialog_manager: DialogManager) -> None:
+    await dialog_manager.start(SetupRemindersSG.select_setting, mode=StartMode.RESET_STACK)

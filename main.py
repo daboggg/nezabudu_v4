@@ -4,12 +4,11 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
-from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from bot.comands import set_commands
 from bot.core import bot, scheduler
 from bot.dialogs.list_reminders_dialog import list_reminders_dialog
+from bot.dialogs.settings_dialog import setup_dialog
 from bot.handlers.add_reminder_handlers import add_reminder_router
 from bot.handlers.cmd import cmd_router
 from bot.handlers.delay_remind_hahdlers import delay_remind_router
@@ -56,7 +55,7 @@ async def start():
         add_reminder_router,
         cancel_reminder_router,
         list_reminders_dialog,
-
+        setup_dialog,
     )
 
     # подключение диалогов
