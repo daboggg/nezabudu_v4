@@ -1,7 +1,7 @@
 import logging
 import re
 
-from parser_v4 import every, in_date,through
+from parser_v4 import every, in_date, through, last_day_of_month
 from parser_v4.data import every_data
 from parser_v4.reminder import Reminder
 
@@ -11,8 +11,15 @@ def parse(reminder_str: str) -> Reminder:
     # удалить в конце строки точку
     if reminder_str.endswith("."): reminder_str = reminder_str[:-1]
 
+    if "Каждый последний день месяца" in reminder_str\
+            or "каждый последний день месяца" in reminder_str:
+        reminder_str = re.sub("[К|к]аждый последний день месяца", "", reminder_str)
+        result = last_day_of_month.start(reminder_str)
+        logger.info(f"возвращенное из парсера значение: {result}")
+        return result
+
     # если в составе строки есть слово "через" или его варианты
-    if "через" in reminder_str or "Через" in reminder_str:
+    elif "через" in reminder_str or "Через" in reminder_str:
         # удалить слово "Через" или "через" из строки
         reminder_str = re.sub("Через|через", "", reminder_str)
         result = through.start(reminder_str)
@@ -33,7 +40,8 @@ def parse(reminder_str: str) -> Reminder:
         return result
 
 if __name__ == '__main__':
-    print(parse("все равно через 8    Лет    7    Дней     никого не поймают 8 Минут."))
+    print(parse("Каждый последний день месяца в 9-44"))
+    # print(parse("все равно через 8    Лет    7    Дней     никого не поймают 8 Минут."))
     # parse("все равно через 8    Лет,    7    Дней,  и   3 часа,     никого не поймают.")
     # start("Каждый      уебищный     31     День     в   23.02    что    то    происходит")
     # parse("Каждый уебищный  09        Числа     в  12.45   что то происходит")
