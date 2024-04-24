@@ -10,6 +10,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from bot.actions import get_reminder, add_reminder
 from bot.handlers.send_message import send_reminder
 from bot.state_groups import RescheduleReminderSG
+from db.db_actions import reminder_completed
 from utils.from_datetime_to_str import datetime_to_str
 
 delay_remind_router = Router()
@@ -57,6 +58,8 @@ async def delay_remind(callback: CallbackQuery, apscheduler: AsyncIOScheduler) -
     job_id = tmp[1]
 
     job: Job = apscheduler.get_job(job_id)
+
+    await reminder_completed(int(job.name))
 
     # форматирование текста для напоминания
     format_text = as_list(

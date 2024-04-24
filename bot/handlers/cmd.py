@@ -4,8 +4,9 @@ from aiogram.types import Message
 from aiogram.utils.formatting import Bold, as_marked_section, as_list, Italic
 from aiogram_dialog import DialogManager, StartMode
 
-from bot.state_groups import ListOfRemindersSG, SetupRemindersSG
+from bot.state_groups import ListOfRemindersSG, SetupRemindersSG, AdminSG
 from db.db_actions import add_user_to_db
+from settings import settings
 
 cmd_router = Router()
 
@@ -54,3 +55,11 @@ async def list_reminders(_, dialog_manager: DialogManager) -> None:
 @cmd_router.message(Command(commands="setup"))
 async def settings_reminders(_, dialog_manager: DialogManager) -> None:
     await dialog_manager.start(SetupRemindersSG.select_setting, mode=StartMode.RESET_STACK)
+
+
+@cmd_router.message(Command(commands="admin"))
+async def admin_panel(_, dialog_manager: DialogManager) -> None:
+    if dialog_manager.event.from_user.id == settings.bots.admin_id:
+        await dialog_manager.start(AdminSG.select_statistics, mode=StartMode.RESET_STACK)
+    else:
+        await dialog_manager.event.answer("Этот раздел только для админа")

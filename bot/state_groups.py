@@ -22,3 +22,9 @@ class SetupRemindersSG(StatesGroup):
     select_setting = State()
     select_auto_delay = State()
     select_buttons_delay = State()
+
+class AdminSG(StatesGroup):
+    select_statistics = State()
+    general_statistics = State()
+    users_statistics = State()
+    show_user_statistics = State()

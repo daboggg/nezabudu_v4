@@ -1,7 +1,7 @@
 import json
 import logging
 
-from sqlalchemy import select
+from sqlalchemy import select, func, ChunkedIteratorResult, Result
 
 from db.db_helper import db_helper
 from models import User
@@ -62,3 +62,42 @@ async def get_delay_times(user_id: int) -> str:
     delay_times = user.delay_times
     await session.close()
     return delay_times
+
+
+# количество выполненных напоминаний (+1) для пользователя
+async def reminder_completed(user_id: int) -> None:
+    session = db_helper.get_session()
+    user: User = await session.get(User, user_id)
+    user.reminder_completed += 1
+    await session.commit()
+    await session.close()
+
+
+# общее количество выполненных напоминаний
+async def all_reminder_completed() -> int:
+    session = db_helper.get_session()
+    query = select(func.sum(User.reminder_completed))
+    result: ChunkedIteratorResult = await session.execute(query)
+    await session.close()
+    return result.scalar()
+
+
+# взять всех пользователей из бд
+async def get_users_from_db() -> list[User]:
+    session = db_helper.get_scoped_session()
+
+    result: Result = await session.execute(select(User))
+    tasks = result.scalars().all()
+    await session.close()
+
+    return list(tasks)
+
+
+# взять пользователя из бд по id
+async def get_user_from_db(user_id: int) -> User:
+    session = db_helper.get_scoped_session()
+    result = await session.execute(select(User).where(User.id == user_id))
+    logger.info(f"получен reminder с id: {user_id}")
+    result = result.scalar()
+    await session.close()
+    return result

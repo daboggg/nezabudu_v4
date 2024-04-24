@@ -1,4 +1,4 @@
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import String, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models import Base
@@ -13,3 +13,4 @@ class User(Base):
 
     delay_times: Mapped[str]
     auto_delay_time: Mapped[str]
+    reminder_completed: Mapped[int] = mapped_column(Integer, nullable=True, default=0)
