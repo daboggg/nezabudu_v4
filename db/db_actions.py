@@ -24,7 +24,12 @@ async def add_user_to_db(user_id: int, username: str, first_name: str, last_name
             auto_delay_time='{"minutes": 15}',
         )
         session.add(user)
-        await session.commit()
+
+    else:
+        user.first_name = first_name
+        user.last_name = last_name
+        user.username = username
+    await session.commit()
     await session.close()
 
 
