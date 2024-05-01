@@ -24,20 +24,21 @@ async def delay_remind(callback: CallbackQuery, apscheduler: AsyncIOScheduler) -
     res = {tmp[2]: int(tmp[3])}
     job: Job = apscheduler.get_job(job_id)
     reminder = job.kwargs.get('reminder')
+    job.remove()
+    reminder.period = None
 
     # добавить задание в скедулер
     new_job = apscheduler.add_job(send_reminder,
-                                  name=job.name,
+                                  name=str(callback.from_user.id),
                                   kwargs={
-                                      'user_id': job.kwargs.get('user_id'),
-                                      'reminder': job.kwargs.get('reminder'),
+                                      'user_id': callback.from_user.id,
+                                      'reminder': reminder,
                                       'run_time': None
                                   },
                                   jobstore='sqlite',
                                   trigger='date',
                                   run_date=datetime.now() + timedelta(**res))
-    if not reminder.period:
-        job.remove()
+
 
     new_job.kwargs['run_time'] = new_job.next_run_time
     apscheduler.modify_job(job_id=new_job.id, jobstore='sqlite', kwargs=new_job.kwargs)
