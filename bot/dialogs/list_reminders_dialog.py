@@ -2,6 +2,7 @@ import operator
 from datetime import datetime
 from typing import Any
 
+from aiogram import F
 from aiogram.types import CallbackQuery
 from aiogram.utils.formatting import as_key_value, Italic, as_list, Bold
 from aiogram_dialog import Dialog, Window, DialogManager
@@ -92,7 +93,8 @@ list_reminders_dialog = Dialog(
             ),
             id='scroll',
             width=1,
-            height=7
+            height=7,
+            hide_on_single_page=True,
         ),
         state=ListOfRemindersSG.start,
         getter=get_reminders,
