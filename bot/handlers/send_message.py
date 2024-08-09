@@ -23,7 +23,8 @@ async def send_reminder(user_id: int,
 
     # форматирование текста для напоминания
     format_text = as_list(
-        Bold(datetime_to_short_str(run_time)),
+        # Bold(datetime_to_short_str(run_time)),
+        Bold(reminder.period if reminder.period else datetime_to_short_str(run_time)),
         Italic(f'повторное оповещение: {repeated_notification}' if repeated_notification else ''),
         "\t── ⋆⋅☆⋅⋆ ── ⋆⋅☆⋅⋆ ──",
         f"👉{reminder.message}👈",
